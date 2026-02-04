@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>For My Bestie</title>
+    <title>Birthday for Vaani</title>
     <style>
         :root {
-            --pink: #ff85a1;
-            --yellow: #ffe162;
-            --cherry: #d11141;
+            --cherry-bg: #fff0f3;
+            --deep-pink: #ff4d6d;
+            --soft-pink: #ff85a1;
+            --flower-yellow: #ffe162;
         }
 
         body, html {
@@ -17,9 +18,19 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
-            background-color: #000;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: white;
+            background-color: var(--cherry-bg);
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+
+        /* Background Animations */
+        .falling-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
         }
 
         .page {
@@ -29,221 +40,216 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            text-align: center;
             position: relative;
+            z-index: 1;
         }
 
         .active { display: flex; }
 
-        /* Page 1: The Seed */
-        #page1 { background: radial-gradient(circle, #1a1a1a, #000); }
-        
-        .seed-btn {
-            width: 80px;
-            height: 80px;
-            background: #4b2c20;
-            border-radius: 50% 50% 10% 10%;
-            border: none;
-            cursor: pointer;
-            transition: transform 0.3s;
+        /* Page 1: Tree Navigation */
+        #page1 { cursor: pointer; }
+        .tree-container {
+            text-align: center;
+            animation: float 3s infinite ease-in-out;
+        }
+        .tree-svg { width: 280px; height: auto; transition: transform 0.3s; }
+        .tree-svg:active { transform: scale(0.9); }
+        .instruction { color: var(--deep-pink); font-weight: bold; margin-top: 10px; }
+
+        /* Page 2: Fireworks */
+        #page2.active { background-color: #000 !important; } /* Lights out for fireworks! */
+        .wish-text {
+            font-size: 2rem;
+            text-align: center;
+            opacity: 0;
+            background: linear-gradient(to right, #ff85a1, #ffe162);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             z-index: 10;
         }
 
-        .tree-container {
+        .rocket-btn { font-size: 60px; background: none; border: none; cursor: pointer; z-index: 10; }
+        
+        /* Annoying Flower Button */
+        .flower-btn {
+            display: none;
             position: absolute;
-            bottom: 20%;
-            display: none;
-        }
-
-        .branch {
-            width: 10px;
-            height: 200px;
-            background: #4b2c20;
-            margin: 0 auto;
-            animation: grow 2s ease-out forwards;
-        }
-
-        @keyframes grow { from { height: 0; } to { height: 250px; } }
-
-        .heart-blossoms {
-            display: grid;
-            grid-template-columns: repeat(5, 40px);
-            gap: 10px;
-            margin-top: -300px;
-            opacity: 0;
-        }
-
-        .show-blossoms { animation: fadeIn 2s forwards 1.5s; }
-
-        .mini-heart {
-            color: var(--pink);
-            font-size: 30px;
-            animation: float 3s infinite ease-in-out;
-        }
-
-        .next-btn-heart {
-            display: none;
-            background: var(--cherry);
-            width: 60px;
-            height: 60px;
-            clip-path: path('M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402m5.726-20.583c-2.203 0-4.446 1.042-5.726 3.238-1.285-2.206-3.522-3.248-5.719-3.248-3.383 0-6.281 2.126-6.281 6.191 0 4.649 4.662 9.512 12 16.252 7.338-6.74 12-11.603 12-16.252 0-4.055-2.888-6.181-6.274-6.181');
+            width: 120px;
+            height: 120px;
+            background: var(--deep-pink);
+            color: white;
             border: none;
+            border-radius: 50%;
             cursor: pointer;
-            margin-top: 20px;
-        }
-
-        /* Page 2: Birthday Wish */
-        .mountain-bg {
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            height: 30%;
-            background: linear-gradient(to top, #0a2e0a, transparent);
-            z-index: -1;
-        }
-
-        .wish-text {
-            font-size: 2.5rem;
             font-weight: bold;
-            opacity: 0;
-            background: linear-gradient(45deg, #ff85a1, #ffe162, #00f2fe);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            box-shadow: 0 0 15px rgba(255, 77, 109, 0.5);
+            z-index: 20;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            text-align: center;
         }
-
-        .rocket-btn {
-            font-size: 50px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            animation: bounce 2s infinite;
-        }
-
-        /* Page 3: Video */
-        video {
-            width: 90%;
-            border: 5px solid var(--pink);
-            border-radius: 15px;
-            box-shadow: 0 0 20px var(--pink);
-        }
-
-        .poem {
-            font-style: italic;
-            padding: 20px;
-            line-height: 1.6;
-            color: var(--yellow);
-            display: none;
-        }
-
-        /* Common Animations */
-        @keyframes fadeIn { to { opacity: 1; } }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
-
-        .annoying {
+        .flower-btn::after { /* Petals */
+            content: "✿";
             position: absolute;
-            transition: all 0.2s;
+            font-size: 160px;
+            color: var(--soft-pink);
+            z-index: -1;
+            opacity: 0.6;
         }
+
+        /* Page 3: Video & Poem */
+        #bdayVideo {
+            width: 80%; /* Smaller size as requested */
+            max-width: 400px;
+            border-radius: 15px;
+            border: 4px solid var(--deep-pink);
+        }
+        .poem-area {
+            display: none;
+            padding: 20px;
+            color: var(--deep-pink);
+            line-height: 1.5;
+            font-size: 1.1rem;
+            text-align: center;
+            animation: fadeIn 2s forwards;
+        }
+
+        /* Animations */
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        
+        canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
     </style>
 </head>
 <body>
 
-    <div id="page1" class="page active">
-        <div id="seed" class="seed-btn" onclick="growTree()"></div>
-        <div class="tree-container" id="tree">
-            <div class="branch"></div>
-            <div class="heart-blossoms" id="blossoms">
-                </div>
+    <div class="falling-container" id="fallZone"></div>
+
+    <div id="page1" class="page active" onclick="goToPage(2)">
+        <div class="tree-container">
+            <svg class="tree-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                <path d="M100 180 Q100 100 130 50 M100 160 Q70 110 50 80 M100 140 Q120 120 150 110" stroke="#4b2c20" stroke-width="8" fill="none" stroke-linecap="round"/>
+                <circle cx="130" cy="50" r="25" fill="#ffb7c5" opacity="0.8"/>
+                <circle cx="50" cy="80" r="20" fill="#ffb7c5" opacity="0.8"/>
+                <circle cx="150" cy="110" r="15" fill="#ff85a1" opacity="0.8"/>
+                <circle cx="100" cy="70" r="30" fill="#ffc0cb" opacity="0.8"/>
+                <text x="75" y="195" fill="#ff4d6d" font-size="10">Tap the tree 🌸</text>
+            </svg>
         </div>
-        <button class="next-btn-heart" id="heartBtn" onclick="goToPage(2)"></button>
     </div>
 
     <div id="page2" class="page">
-        <div class="mountain-bg"></div>
-        <button class="rocket-btn" id="rocket" onclick="launchFireworks()">🚀</button>
-        <h1 id="bdayWish" class="wish-text">Wish you a happy birthday Vaani 🌸</h1>
-        <button id="giftBtn" class="annoying" style="display:none; bottom: 50px;" onclick="goToPage(3)">a small gift for my bestie 🎁</button>
-        <canvas id="fireworksCanvas"></canvas>
+        <canvas id="fwCanvas"></canvas>
+        <button class="rocket-btn" id="rocket" onclick="startFireShow()">🚀</button>
+        <h1 id="wishTxt" class="wish-text">Wish you a happy birthday Vaani 🌸</h1>
+        <button id="giftBtn" class="flower-btn" onclick="goToPage(3)">A small gift for my bestie 🎁</button>
     </div>
 
     <div id="page3" class="page">
         <video id="bdayVideo" controls>
             <source src="birthday-video.mp4.mp4" type="video/mp4">
-            Your browser does not support the video tag.
         </video>
-        <div id="poemContainer" class="poem">
+        <div id="poemArea" class="poem-area">
             "A hand to hold, a heart to share,<br>
             A constant love that’s always there.<br>
             Through every laugh and every tear,<br>
             I’m glad to have a sister near."<br><br>
-            <strong>Wish you a happy birthday bestie!</strong>
+            <strong>Wish you a happy birthday bestie! 💖</strong>
         </div>
     </div>
 
     <script>
+        // --- Navigation ---
         function goToPage(num) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById('page' + num).classList.add('active');
+            if(num === 2) stopFalling(); // Stop blossoms for fireworks scene
             if(num === 3) {
+                startFalling(); // Resume blossoms
                 const video = document.getElementById('bdayVideo');
                 video.onended = () => {
-                    document.getElementById('poemContainer').style.display = 'block';
+                    document.getElementById('poemArea').style.display = 'block';
+                    video.style.marginBottom = "20px";
                 };
             }
         }
 
-        // Page 1 Logic
-        function growTree() {
-            document.getElementById('seed').style.display = 'none';
-            document.getElementById('tree').style.display = 'block';
-            const blossoms = document.getElementById('blossoms');
-            for(let i=0; i<15; i++) {
-                let h = document.createElement('div');
-                h.className = 'mini-heart';
-                h.innerHTML = '♥';
-                h.style.color = i % 2 === 0 ? '#ff85a1' : '#ffe162';
-                blossoms.appendChild(h);
-            }
-            blossoms.classList.add('show-blossoms');
-            setTimeout(() => {
-                document.getElementById('heartBtn').style.display = 'block';
-            }, 3000);
+        // --- Falling Hearts & Flowers ---
+        const fallZone = document.getElementById('fallZone');
+        let fallInterval;
+        function startFalling() {
+            fallInterval = setInterval(() => {
+                const item = document.createElement('div');
+                item.innerHTML = Math.random() > 0.5 ? '🌸' : '💗';
+                item.style.cssText = `
+                    position: absolute; left: ${Math.random() * 100}%; top: -50px;
+                    font-size: ${Math.random() * 20 + 10}px;
+                    transition: transform 4s linear, opacity 4s;
+                    z-index: 0; user-select: none;
+                `;
+                fallZone.appendChild(item);
+                setTimeout(() => {
+                    item.style.transform = `translateY(110vh) rotate(${Math.random() * 360}deg)`;
+                    item.style.opacity = '0';
+                }, 100);
+                setTimeout(() => item.remove(), 4500);
+            }, 300);
         }
+        function stopFalling() { clearInterval(fallInterval); fallZone.innerHTML = ''; }
+        startFalling();
 
-        // Page 2 Fireworks logic (Simplified Canvas)
-        function launchFireworks() {
+        // --- Fireworks Logic ---
+        function startFireShow() {
             document.getElementById('rocket').style.display = 'none';
-            const wish = document.getElementById('bdayWish');
-            wish.style.opacity = '1';
+            document.getElementById('wishTxt').style.opacity = '1';
+            initFireworks(); // Triggers canvas animation
             
-            // Trigger annoying button movement
             const giftBtn = document.getElementById('giftBtn');
-            giftBtn.style.display = 'block';
+            giftBtn.style.display = 'flex';
+            giftBtn.style.top = "80%";
             
+            // Annoying movement
             giftBtn.onmouseover = () => {
-                giftBtn.style.left = Math.random() * 80 + '%';
-                giftBtn.style.top = Math.random() * 80 + '%';
+                giftBtn.style.left = Math.random() * 60 + 10 + "%";
+                giftBtn.style.top = Math.random() * 70 + 10 + "%";
             };
         }
 
-        // Add drifting background hearts for Page 1
-        setInterval(() => {
-            const heart = document.createElement('div');
-            heart.innerHTML = '♥';
-            heart.style.position = 'fixed';
-            heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.top = '100vh';
-            heart.style.color = Math.random() > 0.5 ? '#ff85a1' : '#ffe162';
-            heart.style.fontSize = Math.random() * 20 + 10 + 'px';
-            heart.style.transition = 'all 4s linear';
-            heart.style.zIndex = '-1';
-            document.body.appendChild(heart);
-            setTimeout(() => {
-                heart.style.top = '-10vh';
-                heart.style.opacity = '0';
-            }, 100);
-            setTimeout(() => heart.remove(), 4000);
-        }, 300);
+        function initFireworks() {
+            const canvas = document.getElementById('fwCanvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            let particles = [];
+
+            function createParticle(x, y) {
+                for (let i = 0; i < 30; i++) {
+                    particles.push({
+                        x, y,
+                        dx: (Math.random() - 0.5) * 8,
+                        dy: (Math.random() - 0.5) * 8,
+                        color: `hsl(${Math.random() * 360}, 100%, 70%)`,
+                        life: 100
+                    });
+                }
+            }
+
+            function animate() {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                particles.forEach((p, i) => {
+                    p.x += p.dx; p.y += p.dy; p.life--;
+                    ctx.fillStyle = p.color;
+                    ctx.fillRect(p.x, p.y, 3, 3);
+                    if (p.life <= 0) particles.splice(i, 1);
+                });
+                if (Math.random() < 0.05) createParticle(Math.random() * canvas.width, Math.random() * canvas.height);
+                requestAnimationFrame(animate);
+            }
+            animate();
+        }
     </script>
 </body>
 </html>
